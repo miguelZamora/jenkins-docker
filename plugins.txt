@@ -1,0 +1,5 @@
+github
+pipeline
+blueocean
+docker-plugin
+configuration-as-code
