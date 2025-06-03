@@ -27,3 +27,4 @@ replay_pid*
 #carpetas de los sistemas de archivos disco duro a la manipular nfs ...
 .var/
 .jenkins_home/
+jenkins_home/
