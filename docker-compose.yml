@@ -1,7 +1,7 @@
 #version: '3.8'
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build: ./imagenes/jenkins/.
     container_name: jenkins
     restart: unless-stopped
     ports:
@@ -19,3 +19,6 @@ services:
 
 volumes:
   jenkins_home:
+
+
+
