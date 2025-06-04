@@ -1,17 +1,16 @@
-#version: '3.8'
 services:
   jenkins:
-    image: jenkins/jenkins:lts-jdk11
+    build: ./imagenes/jenkins/.
     container_name: jenkins
-    restart: unless-stopped
+    restart: unless-stopped 
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - C:\Users\gomi\Desktop\test-yaml\jenkins\branch\jenkins-docker\jenkins_home:/var/jenkins_home
-      - C:\Users\gomi\Desktop\test-yaml\jenkins\branch\jenkins-docker\var\run\docker.sock:/var/run/docker.sock
-      - C:\Users\gomi\Desktop\test-yaml\jenkins\branch\jenkins-docker\plugins.txt:/usr/share/jenkins/ref/plugins.txt  # Plugins automáticos
-      - C:\Users\gomi\Desktop\test-yaml\jenkins\branch\jenkins-docker\jenkins.yaml:/var/jenkins_home/casc.yaml  # Configuración como código
+      - ${JENKINS_DATA_PATH}/jenkins_home:/var/jenkins_home
+      - ${JENKINS_DATA_PATH}/var/run/docker.sock:/var/run/docker.sock
+      - ${JENKINS_DATA_PATH}/plugins.txt:/usr/share/jenkins/ref/plugins.txt
+      - ${JENKINS_DATA_PATH}/jenkins.yaml:/var/jenkins_home/casc.yaml
     environment:
       - TZ=America/Santiago
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
@@ -19,3 +18,4 @@ services:
 
 volumes:
   jenkins_home:
+
