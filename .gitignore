@@ -29,4 +29,5 @@ replay_pid*
 .jenkins_home/
 jenkins_home/
 .target/
+target/
 
