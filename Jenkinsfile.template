@@ -1,0 +1,67 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'jenkins-agent'
+      yaml """
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: maven
+            image: maven:3.8.6-openjdk-11
+            command: ['cat']
+            tty: true
+            volumeMounts:
+              - name: docker-sock
+                mountPath: /var/run/docker.sock
+          - name: docker
+            image: docker:20.10
+            command: ['cat']
+            tty: true
+            volumeMounts:
+              - name: docker-sock
+                mountPath: /var/run/docker.sock
+          volumes:
+            - name: docker-sock
+              hostPath:
+                path: /var/run/docker.sock
+        """
+    }
+  }
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    
+    stage('Build') {
+      steps {
+        container('maven') {
+          sh 'mvn clean package'
+        }
+      }
+    }
+    
+    stage('Docker Build') {
+      steps {
+        container('docker') {
+          script {
+            docker.build("my-java-app:${env.BUILD_ID}").push()
+          }
+        }
+      }
+    }
+    
+    stage('Deploy to K8s') {
+      steps {
+        kubernetesDeploy(
+          kubeconfigId: 'k8s-credentials',
+          configs: 'kubernetes/deployment.yaml',
+          enableConfigSubstitution: true
+        )
+      }
+    }
+  }
+}
